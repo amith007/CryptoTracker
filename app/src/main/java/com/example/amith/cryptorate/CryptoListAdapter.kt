@@ -15,9 +15,13 @@ class CryptoListAdapter(val coinList: ArrayList<Coin>) : RecyclerView.Adapter<Cr
     override fun onBindViewHolder(holder: CryptoViewHolder, position: Int) {
         holder.coinName.text = coinList.get(position).name
         holder.coinName.setOnClickListener {
-//            if (!holder.coinName.isChecked) {
-//                holder.coinName.setCheckMarkDrawable(R.drawable.checkbox_on_background)
-//            }
+            if (!holder.coinName.isChecked) {
+                holder.coinName.setCheckMarkDrawable(R.drawable.checkbox_marked)
+                holder.coinName.isChecked = true
+            } else {
+                holder.coinName.setCheckMarkDrawable(R.drawable.checkbox_blank_outline)
+                holder.coinName.isChecked = false
+            }
         }
     }
 
