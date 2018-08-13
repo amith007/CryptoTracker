@@ -1,43 +1,37 @@
 package com.example.amith.cryptorate
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.widget.LinearLayout
+import com.example.amith.network.RestAPI
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class HomeActivity : AppCompatActivity() {
-    private val coinArray = ArrayList<Coin>()
+class HomeActivity : AppCompatActivity(), Callback<CoinListResponse> {
+    private var coinListData: List<CoinData>? = null
     private lateinit var cryptoListRecycler: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
-        setupMockCoins()
-
         cryptoListRecycler = findViewById(R.id.cryptolist_recycler)
         cryptoListRecycler.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-        cryptoListRecycler.adapter = CryptoListAdapter(coinArray)
-
-
+        RestAPI().getTokenList().enqueue(this)
     }
 
-    fun setupMockCoins() {
-        coinArray.add(Coin(1, "Bitcoin", "BTC", "Bitcoin"))
-        coinArray.add(Coin(2, "Litecoin", "LTC", "Litecoin"))
-        coinArray.add(Coin(3, "Ixcoin", "IXC", "Ixcoin"))
-        coinArray.add(Coin(4, "BitCoin", "BTC", "bitcoin"))
-        coinArray.add(Coin(5, "Terracoin", "TRC", "Terracoin"))
-        coinArray.add(Coin(6, "Peercoin", "PRC", "Peercoin"))
-        coinArray.add(Coin(7, "Novacoin", "NVC", "Novacoin"))
-        coinArray.add(Coin(8, "BitCoin", "BTC", "BitCoin"))
-        coinArray.add(Coin(9, "Feathercoin", "FTC", "Feathercoin"))
-        coinArray.add(Coin(10, "BitCoin", "BTC", "bitcoin"))
-        coinArray.add(Coin(11, "BitCoin", "BTC", "bitcoin"))
-        coinArray.add(Coin(12, "BitCoin", "BTC", "bitcoin"))
+    override fun onResponse(call: Call<CoinListResponse>?, response: Response<CoinListResponse>?) {
+        if (response != null && response?.isSuccessful && response?.body() != null) {
+            coinListData = response?.body()!!.data
+            cryptoListRecycler.adapter = CryptoListAdapter(coinListData!!)
+        }
     }
 
-
+    override fun onFailure(call: Call<CoinListResponse>?, t: Throwable?) {
+        Log.e("retrofit", "Coin list call failed ${t?.message}")
+    }
 
 }
