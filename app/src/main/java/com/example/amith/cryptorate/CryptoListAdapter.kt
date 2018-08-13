@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.coinlist_row.view.*
 
-class CryptoListAdapter(val coinList: ArrayList<Coin>) : RecyclerView.Adapter<CryptoListAdapter.CryptoViewHolder>() {
+class CryptoListAdapter(val coinList: List<CoinData>) : RecyclerView.Adapter<CryptoListAdapter.CryptoViewHolder>() {
 
     override fun getItemCount(): Int {
         return coinList.size
